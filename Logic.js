@@ -458,3 +458,321 @@ var  Node=function(id, xLoc,  yLoc) {
 
 
 };
+
+function Game (){
+
+    this._game= null;
+    this.prototype.nodes = [];
+
+    //public static Map<Integer, Node> nodes = new HashMap<Integer, Node>();
+    //private List<Game.Node> nodes;
+    var player1;
+    var player2;
+    var timeStep;
+
+    //We have to decide who lives in each round if two people choose the same space.
+    //That is decided by this advantage number.
+    //private PlayerId advantage = PlayerId.ONE;
+
+    var  p1_nextMove;
+    var p2_nextMove;
+
+    var player1Messages = [];
+    var player2Messages =[];
+
+
+
+    this.prototype.getInstance=function(){
+        if(game == null){
+           this._game = new Game();
+        }
+        return this._game;
+    }
+
+
+    /****************************************************************************************
+     * Commands from the players
+     ****************************************************************************************/
+   this. registerPlayer(int playerId, String playerName, int numPieces){
+        if(playerId == 1){
+            player1 = new Player(PlayerId.ONE, numPieces,playerName);
+            return this.toString();
+        }else{
+            player2 = new Player(PlayerId.TWO, numPieces, playerName);
+            return this.toString();
+        }
+    }
+
+    Game.prototype.receiveMoves=function( player, move){
+
+        if(player1 != null && player == 1){
+            p1_nextMove = move;
+            player1.setNextMove(p1_nextMove);
+        }else if(player2 != null && player == 2){
+            p2_nextMove = move;
+            player2.setNextMove(p2_nextMove);
+        }
+
+        if(player1 != null && player2 != null){
+            if(player1.getNextMove() != null && player2.getNextMove() != null){
+                makeMove();
+                p1_nextMove = null;
+                p2_nextMove = null;
+            }
+        }
+    }
+
+
+    Game.prototype._makeMove=function(){
+        var a = advantage();
+        if(a===(PlayerId.ONE)){
+            move(player1);
+            move(player2);
+            advanceTime(a);
+            this.player1Messages.push(this.toString());
+            this.player2Messages.push(this.toString());
+        }else{
+            move(player2);
+            move(player1);
+            _advanceTime(a);
+            this.player1Messages.push(this.toString());
+            this.player2Messages.push(this.toString());
+        }
+    }
+
+     function advantage(){
+        var  player = Math.random();
+        if(player>(0.5)){
+            return PlayerId.ONE;
+        }else{
+            return PlayerId.TWO;
+        }
+    }
+
+    function advanceTime(advantage){
+
+        nodes.map(function(node){
+           node.moveTime(advantage);
+        }) ;
+
+
+
+        player1.advanceTime();
+        player2.advanceTime();
+        timeStep++;
+    }
+
+    function move(player){
+        if(player.getNextMove() != null){
+            var nextMove = player.getNextMove();
+            //If pass then do nothing
+            if(nextMove.toLowerCase().trim()===("pass")){
+                player.setNextMove(null);
+                return;
+            }
+
+            //Otherwise make all the moves
+            var moves = nextMove.split("\\|");
+              moves.map(function(singleMove){
+                var move = singleMove.split(",");
+                var nodeId =move[0]  ;
+
+                var program = [];
+
+                for( i = 1; i < 5; i++){
+                    var value = move[i].toLowerCase().trim();
+
+                    if(value==="up"){
+                        program.push(Direction.UP);
+                    }else if(value==="down"){
+                        program.push(Direction.DOWN);
+                    }else if(value=="left"){
+                        program.push(Direction.LEFT);
+                    }else if(value==="right"){
+                        program.push(Direction.RIGHT);
+                    }
+                }
+
+                var node = nodes.indexOf(nodeId);
+
+                player.place(node, program);
+
+            } )
+        }
+
+        if(player == player1){
+            player1.setNextMove(null);
+        }else if (player == player2){
+            player2.setNextMove(null);
+        }
+
+    }
+
+    /****************************************************************************************
+     * Functions at application startup
+     ****************************************************************************************/
+
+
+    Game.prototype.createBoard=function(board){
+
+        var reader = new BufferedReader(new FileReader(board));
+        var nextLine;
+        var  nodes = [];
+        var  edges = [];
+
+        while((nextLine = reader.readLine()) != null){
+            var  splitString = nextLine.split(",");
+            if(splitString.length == 3 && splitString[0]!=="nodeid"){
+                nodes.add(splitString);
+            }
+
+            if(splitString.length  == 2 && splitString[0]!=="nodeid1" ){
+                edges.add(splitString);
+            }
+        }
+
+        createNodes(nodes);
+        connectNodes(edges);
+    }
+
+
+    function createNodes(nodes){
+            nodes.map(function(rep){
+            node = new Node(parseInt(rep[0]), parseInt(rep[1]),parseInt(rep[2]));
+            this.nodes.push(node.getId(), node);
+        } );
+    }
+
+   connectNodes=function(edges){
+           edges.map(function(rep){
+            var nodeId1 = parseInt(rep[0]);
+            var nodeId2 = parseInt(rep[1]);
+            var node1 = nodes.inedxOf(nodeId1);
+            var node2 = nodes.indexOf(nodeId2);
+            node1.connect(node2);
+            node2.connect(node1);
+        });
+    }
+
+    function getsortedNodes(){
+         var hashkeys = this.nodes.keys();
+         var sortedNodes = hashkeys.map(function (node){  return nodes.hashkeys.node;});
+
+         sortedNodes.sort(function (o1,o2) {
+                 return o1.getId() - o2.getId();
+         });
+        return sortedNodes;
+    }
+    Game.prototype.toString=function(){
+
+        var player_1_score=0;
+        var player_2_score = 0;
+
+        var builder = [];
+        builder.push("nodeid,xLoc,yLoc,status,up,down,left,right\n");
+        var sortedNodes = getsortedNodes();
+        for( i = 0; i < sortedNodes.length; i++){
+            builder.push(sortedNodes.indexOf(i).toString() + "\n");
+            var status = sortedNodes.indexOf(i).getStatus();
+
+            if(status===Status.EATEN_P1 || status===Status.OCCUPIED_P1){
+                player_1_score++;
+            }else if(status===Status.EATEN_P2 || status===Status.OCCUPIED_P2){
+                player_2_score++;
+            }
+        }
+        if(player1 != null){
+            builder.push("\n\nPlayerID,PlayerName,unused,dead,inPlay,score\n");
+            builder.push(player1.getPlayerId() + "," + player1.getPlayerName() + "," + player1.unusedCount() +
+                    "," + player1.deadCount() + "," + player1.inPlayCount() + "," + player_1_score + "\n");
+
+            if(player2 != null){
+                builder.push(player2.getPlayerId() + "," + player2.getPlayerName() + "," + player2.unusedCount() +
+                        "," + player2.deadCount() + "," + player2.inPlayCount() + "," + player_2_score + "\n");
+            }
+        }
+        return builder.join();
+    }
+
+
+    Game.prototype.getMessages=function(playerId){
+        if(playerId == 1){
+            var returnMessages = this.player1Messages.slice(0);
+            clearMessages(playerId);
+            return returnMessages;
+        }else{
+            var returnMessages = this.player2Messages.slice(0);
+            clearMessages(playerId);
+            return returnMessages;
+        }
+    }
+
+    this.prototype.clearMessages=function(playerId){
+        if(playerId === 1){
+            this.player1Messages.clear();
+        }else{
+            this.player2Messages.clear();
+        }
+    }
+
+    this.prototype.readyForMove=function(playerId){
+        if(playerId === 1){
+            return p1_nextMove === null;
+        }else{
+            return p2_nextMove === null;
+        }
+    }
+
+    /**
+     * Used for the ui, returns the players stats
+     * @return
+     */
+    Game.prototype.getPlayerStats()=function{
+        var player_1_score=0;
+        var player_2_score = 0;
+
+        var builder = [];
+        builder.push("nodeid,xLoc,yLoc,status,up,down,left,right\n");
+
+        var sortedNodes = getsortedNodes();
+
+        for( i = 0; i < sortedNodes.size(); i++){
+            var status = sortedNodes.indexOf(i).getStatus();
+
+            if(status===Status.EATEN_P1 || status===Status.OCCUPIED_P1){
+                player_1_score++;                            }
+            else if(status===Status.EATEN_P2 || status===Status.OCCUPIED_P2){
+                player_2_score++;
+            }
+        }
+
+        var  playerStats = [];
+        if(player1 != null){
+            var p1Stats = [];
+
+            p1Stats.push(player1.getPlayerName());
+            p1Stats.push(player1.unusedCount());
+            p1Stats.push(player1.deadCount());
+            p1Stats.push(player1.inPlayCount());
+            p1Stats.push(player_1_score);
+
+            playerStats.put(player1.getPlayerId(),p1Stats);
+
+            if(player2 != null){
+                var p2Stats =[];
+
+                p2Stats.push(player2.getPlayerName());
+                p2Stats.push(player2.unusedCount());
+                p2Stats.push(player2.deadCount());
+                p2Stats.push(player2.inPlayCount());
+                p2Stats.push(player_2_score);
+
+                playerStats.put(player2.getPlayerId(),p2Stats);
+            }
+        }
+
+        return playerStats;
+    }
+
+
+}
