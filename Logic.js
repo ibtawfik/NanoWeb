@@ -21,8 +21,7 @@ var PlayerId =Object.freeze({
 });
 
 
-var Player;
-Player = function (playerId, pieces, playerName) {
+var Player = function (playerId, pieces, playerName) {
 
     this._playerId = playerId;
     this._playerName = playerName;
@@ -121,76 +120,77 @@ Player = function (playerId, pieces, playerName) {
 }
 
 var  Piece = function(playerId) {
-    this._playerId=playerid;
-    this._location=null;
-    this._program=[];
-    this._moveCount=0;
-    this._isDead=false;
-    this._nodesEaten=0;
+    this._playerId = playerid;
+    this._location = null;
+    this._program = [];
+    this._moveCount = 0;
+    this._isDead = false;
+    this._nodesEaten = 0;
+    this._isValidProgram=function(moveOrder){
+           if(moveOrder == null){
+               return false;
+           }
+           //Should have 4 moves
+           if(moveOrder.length != 4){
+               return false;
+           }
 
-    var programPiece=function(moveOrder){
+           //Should have each move type
+           return moveOrder.indexof(Direction.UP)>-1 && moveOrder.inedxOf(Direction.DOWN)>-1 &&
+                   moveOrder.indexOf(Direction.LEFT)>-1 && moveOrder.indexOf(Direction.RIGHT)>-1;
+       }
+
+       this.advance=function(){
+           if(this._isDead == false) {
+               var numberOfDirection = 4;
+               Object.freeze(numberOfDirection) ;
+               if (this._location != null && _isValidProgram(this._program)) {
+                   //Search for valid move
+                   for (i = this._moveCount; i < this._moveCount + numberOfDirection; i++) {
+                       var nextMove = this._program.get((i) % numberOfDirection);
+
+                       if (this._location.canMove(nextMove)) {
+                           this._location.move(nextMove);
+                           this._moveCount = i + 1;
+                           return nextMove;
+                       }
+                   }
+
+                   //If no valid move available then the piece is dead
+                   this._isDead = true;
+                   return null;
+               }
+           }
+           return null;
+       }
+}
+
+
+    Piece.prototype.programPiece=function(moveOrder){
         if(isValidProgram(moveOrder)){
             this._program=moveOrder;
         }
     }
 
-    var  isValidProgram=function(moveOrder){
-        if(moveOrder == null){
-            return false;
-        }
 
-        //Should have 4 moves
-        if(moveOrder.length != 4){
-            return false;
-        }
-
-        //Should have each move type
-        return moveOrder.indexof(Direction.UP)>-1 && moveOrder.inedxOf(Direction.DOWN)>-1 &&
-                moveOrder.indexOf(Direction.LEFT)>-1 && moveOrder.indexOf(Direction.RIGHT)>-1;
-    }
-
-    this.advance=function(){
-        if(this._isDead == false) {
-            var numberOfDirection = 4;
-            Object.freeze(numberOfDirection) ;
-            if (this._location != null && isValidProgram(this._program)) {
-                //Search for valid move
-                for (i = this._moveCount; i < this._moveCount + numberOfDirection; i++) {
-                    var nextMove = this._program.get((i) % numberOfDirection);
-
-                    if (this._location.canMove(nextMove)) {
-                        this._location.move(nextMove);
-                        this._moveCount = i + 1;
-                        return nextMove;
-                    }
-                }
-
-                //If no valid move available then the piece is dead
-                this._isDead = true;
-                return null;
-            }
-        }
-        return null;
-    }
-
-    this.placeOnNode=function( node){
+    Piece.prototype.placeOnNode=function( node){
         this._location = node;
         this._nodesEaten++;
     }
 
-    this.getPlayerId=function(){
+   Piece.prototype.getPlayerId=function(){
         return this._playerId;
     }
 
-    this.getNodesEaten=function(){
+   Piece.prototype.getNodesEaten=function(){
         return this._nodesEaten;
     }
 
-    this.isDead=function(){
+    Piece.prototype.isDead=function(){
         return this._isDead;
     }
 
-    this.getPreviousDirection=function(){
+    Piece.prototype.getPreviousDirection=function(){
         if(this._moveCount > 0 ){
             return this._program.get((this._moveCount - 1) % 4);
         }else{
@@ -199,53 +199,48 @@ var  Piece = function(playerId) {
 
     }
 
-    this.killPiece=function(){
+    Piece.prototype.killPiece=function(){
         this._isDead = true;
     }
 
-    this.isNewPiece=function(){
+    Piece.prototype.isNewPiece=function(){
         //System.out.println(moveCount);
-        return this.__moveCount == 0;
+        return this._moveCount == 0;
     }
 
-}
+
 
 var  Node=function(id, xLoc,  yLoc) {
-    this.id=id;
     this.id = id;
-    this.xLoc = xLoc;
-    this.yLoc = yLoc;
+    this._xLoc = xLoc;
+    this._yLoc = yLoc;
     this._status = Status.FREE;
-   // @JsonIgnore
-    this.up;
-   // @JsonIgnore
-    this.down;
+    // @JsonIgnore
+    this.up = null;
+    // @JsonIgnore
+    this.down = null;
     //@JsonIgnore
-    this.left;
-   // @JsonIgnore
-    this.right;
+    this.left = null;
+    // @JsonIgnore
+    this.right = null;
 
-    this._occupant;
+    this._occupant = null;
     this._desireOccupancy = [];
-
-
-
-
-
-    this.getId=function(){
+}
+    Node.prototype.getId=function(){
         return this.id;
     }
 
-    this.toString=function(){
-        var up = nullCheck(this.up);
-        var  down = nullCheck(this.down);
-        var left = nullCheck(this.left);
-        var right= nullCheck(this.right);
+    Node.prototype.toString=function(){
+        var up = _nullCheck(this.up);
+        var  down = _nullCheck(this.down);
+        var left = _nullCheck(this.left);
+        var right= _nullCheck(this.right);
 
-        return this.id + "," + this.xLoc + "," + this.yLoc + "," + this._status + "," + this.up + "," + this.down + "," + this.left + "," + this.right;
+        return this.id + "," + this._xLoc+ "," + this._yLoc + "," + this._status + "," + this.up + "," + this.down + "," + this.left + "," + this.right;
     }
 
-    this.nullCheck=function(node){
+    Node.prototype._nullCheck=function(node){
         if(node == null){
             return "null";
         }else {
@@ -253,7 +248,7 @@ var  Node=function(id, xLoc,  yLoc) {
         }
     }
 
-    this.canMove=function(direction){
+    Node.prototype.canMove=function(direction){
 
         switch (direction){
             case Direction.UP:
@@ -284,7 +279,7 @@ var  Node=function(id, xLoc,  yLoc) {
         }
     }
 
-    this.connect=function(node, direction){
+    Node.prototype.connect=function(node, direction){
         switch (direction){
             case Direction.UP:
                 up = node;
@@ -297,11 +292,11 @@ var  Node=function(id, xLoc,  yLoc) {
         }
     }
 
-    this.isFree=function(){
+    Node.prototype.isFree=function(){
         return this._status.equals(Status.FREE);
     }
 
-    this.move=function(direction){
+    Node.prototype=function(direction){
             switch (direction){
                 case Direction.UP:
                     up.place(this._occupant);
@@ -322,14 +317,14 @@ var  Node=function(id, xLoc,  yLoc) {
             }
     }
 
-    this.place=function(piece){
+    Node.prototype.place=function(piece){
         this._desireOccupancy.add(piece);
     }
 
     /**
      * After all pieces have moved onto thier desired node decide which ones to keep and which ones to eject
      */
-    this.moveTime=function(playerWithPriority){
+    Node.prototype.moveTime=function(playerWithPriority){
         //First check if the node is currently occupied. If so then move the occupant along
         if(this._occupant != null){
             if(this._occupant.getPlayerId()==(PlayerId.ONE)){
@@ -347,7 +342,7 @@ var  Node=function(id, xLoc,  yLoc) {
             if(piece.getPreviousDirection() != null){
                 //First order is piece that moved up to get here
                 if(piece.getPreviousDirection()==(Direction.UP)){
-                    occupy(piece);
+                    _occupy(piece);
                     occuopantSelected = true;
                 }
 
@@ -356,7 +351,7 @@ var  Node=function(id, xLoc,  yLoc) {
                     if(occuopantSelected){
                         piece.killPiece();
                     }else{
-                        occupy(piece);
+                        _occupy(piece);
                         occuopantSelected = true;
                     }
                 }
@@ -366,7 +361,7 @@ var  Node=function(id, xLoc,  yLoc) {
                     if(occuopantSelected){
                         piece.killPiece();
                     }else{
-                        occupy(piece);
+                        _occupy(piece);
                         occuopantSelected = true;
                     }
                 }
@@ -376,7 +371,7 @@ var  Node=function(id, xLoc,  yLoc) {
                     if(occuopantSelected){
                         piece.killPiece();
                     }else{
-                        occupy(piece);
+                        _occupy(piece);
                         occuopantSelected = true;
                     }
                 }
@@ -392,7 +387,7 @@ var  Node=function(id, xLoc,  yLoc) {
             if(occuopantSelected ||(newPieces.length > 1 && piece.getPlayerId() != playerWithPriority)){
                 piece.killPiece();
             }else{
-                occupy(piece);
+                _occupy(piece);
                 occuopantSelected = true;
             }
         }  )
@@ -401,12 +396,12 @@ var  Node=function(id, xLoc,  yLoc) {
 
     }
 
-   this.getxLoc=function(){
-        return this.xLoc;
+   Node.prototype.getxLoc=function(){
+        return this._xLoc;
     }
 
-   this.getyLoc=function(){
-        return this.yLoc;
+   Node.prototype.getyLoc=function(){
+        return this._yLoc;
     }
 
     /**
@@ -415,35 +410,35 @@ var  Node=function(id, xLoc,  yLoc) {
      * @param node
      * @return
      */
-    this.connect=function(node){
+    Node.prototype.connect=function(node){
 
         //If same x then node is above or below
-        if(node.getxLoc() == this.xLoc){
-            if(node.getyLoc() > this.yLoc){
+        if(node.getxLoc() == this._xLoc){
+            if(node.getyLoc() > this._yLoc){
                 this.up = node;
-              //  System.out.println("UP: current:" + this.yLoc + " above: " + node.getyLoc());
+              //  System.out.println("UP: current:" + this._yLoc + " above: " + node.getyLoc());
                 return Direction.UP;
             }else{
                 this.down = node;
-           //     System.out.println("DOWN: current:" + this.yLoc + " below: " + node.getyLoc());
+           //     System.out.println("DOWN: current:" + this._yLoc + " below: " + node.getyLoc());
                 return Direction.DOWN;
 
             }
         }else{
             //If same Y then node is left or right
-            if(node.getxLoc() > this.xLoc){
+            if(node.getxLoc() > this._xLoc){
                 this.right = node;
-             //   System.out.println("Right: current:" + this.xLoc + " right: " + node.getxLoc());
+             //   System.out.println("Right: current:" + this._xLoc+ " right: " + node.getxLoc());
                 return Direction.RIGHT;
             }else{
                 this.left = node;
-              //  System.out.println("Left: current:" + this.xLoc + " left: " + node.getxLoc());
+              //  System.out.println("Left: current:" + this._xLoc+ " left: " + node.getxLoc());
                 return Direction.LEFT;
             }
         }
     }
 
-    var occupy=function(piece){
+    Node.prototype._occupy=function(piece){
         this._occupant = piece;
         if(piece.getPlayerId() == PlayerId.ONE){
             this._status = Status.OCCUPIED_P1;
@@ -452,17 +447,17 @@ var  Node=function(id, xLoc,  yLoc) {
         }
     };
 
-    this.getStatus=function(){
+    Node.prototype.getStatus=function(){
         return this._status;
     }
 
 
-};
+
 
 function Game (){
 
     this._game= null;
-    this.prototype.nodes = [];
+    this.nodes = [];
 
     //public static Map<Integer, Node> nodes = new HashMap<Integer, Node>();
     //private List<Game.Node> nodes;
@@ -481,8 +476,7 @@ function Game (){
     var player2Messages =[];
 
 
-
-    this.prototype.getInstance=function(){
+    this.getInstance=function(){
         if(game == null){
            this._game = new Game();
         }
@@ -493,7 +487,7 @@ function Game (){
     /****************************************************************************************
      * Commands from the players
      ****************************************************************************************/
-   this. registerPlayer(int playerId, String playerName, int numPieces){
+   this.registerPlayer=function( playerId, playerName, numPieces){
         if(playerId == 1){
             player1 = new Player(PlayerId.ONE, numPieces,playerName);
             return this.toString();
@@ -503,7 +497,7 @@ function Game (){
         }
     }
 
-    Game.prototype.receiveMoves=function( player, move){
+    this.receiveMoves=function( player, move){
 
         if(player1 != null && player == 1){
             p1_nextMove = move;
@@ -523,7 +517,7 @@ function Game (){
     }
 
 
-    Game.prototype._makeMove=function(){
+    function makemove(){
         var a = advantage();
         if(a===(PlayerId.ONE)){
             move(player1);
@@ -613,7 +607,7 @@ function Game (){
      ****************************************************************************************/
 
 
-    Game.prototype.createBoard=function(board){
+    this.createBoard=function(board){
 
         var reader = new BufferedReader(new FileReader(board));
         var nextLine;
@@ -643,7 +637,7 @@ function Game (){
         } );
     }
 
-   connectNodes=function(edges){
+    function connectNodes(edges){
            edges.map(function(rep){
             var nodeId1 = parseInt(rep[0]);
             var nodeId2 = parseInt(rep[1]);
@@ -663,7 +657,7 @@ function Game (){
          });
         return sortedNodes;
     }
-    Game.prototype.toString=function(){
+    this.toString=function(){
 
         var player_1_score=0;
         var player_2_score = 0;
@@ -695,7 +689,7 @@ function Game (){
     }
 
 
-    Game.prototype.getMessages=function(playerId){
+    this.getMessages=function(playerId){
         if(playerId == 1){
             var returnMessages = this.player1Messages.slice(0);
             clearMessages(playerId);
@@ -707,7 +701,7 @@ function Game (){
         }
     }
 
-    this.prototype.clearMessages=function(playerId){
+    this.clearMessages=function(playerId){
         if(playerId === 1){
             this.player1Messages.clear();
         }else{
@@ -715,7 +709,7 @@ function Game (){
         }
     }
 
-    this.prototype.readyForMove=function(playerId){
+    this.readyForMove=function(playerId){
         if(playerId === 1){
             return p1_nextMove === null;
         }else{
@@ -727,7 +721,7 @@ function Game (){
      * Used for the ui, returns the players stats
      * @return
      */
-    Game.prototype.getPlayerStats()=function{
+    this.getPlayerStats=function(){
         var player_1_score=0;
         var player_2_score = 0;
 
@@ -776,3 +770,24 @@ function Game (){
 
 
 }
+
+(function () {
+    "use strict";
+
+    angular.module('myApp', []).factory('logic',
+        function () {
+            return {
+                getInstance: getInstance,
+                registerPlayer: registerPlayer,
+                receiveMoves: receiveMoves,
+                createBoard: createBoard,
+                toString:toString,
+                getMessages: getMessages,
+                clearMessages:clearMessages,
+                readyForMove:readyForMove,
+                getPlayerStats:getPlayerStats
+            };
+
+
+});
+}());
