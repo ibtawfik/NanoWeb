@@ -88,23 +88,23 @@ var Player = function (playerId, pieces, playerName) {
                 this._dead.push(piece);
             }
         }
-    }
+    };
 
     this.getPlayerId = function () {
         return this._playerId.name();
-    }
+    };
 
     this.unusedCount = function () {
         return this._unused.length;
-    }
+    };
 
     this.deadCount = function () {
         return this._dead.length;
-    }
+    };
 
     this.inPlayCount = function () {
         return this._inPlay.length;
-    }
+    };
 
     this.getScore = function () {
         var score = 0;
@@ -120,13 +120,14 @@ var Player = function (playerId, pieces, playerName) {
 }
 
 var  Piece = function(playerId) {
-    this._playerId = playerid;
+    this._playerId = playerId;
     this._location = null;
     this._program = [];
     this._moveCount = 0;
     this._isDead = false;
     this._nodesEaten = 0;
     this._isValidProgram=function(moveOrder){
+        var that = this;
            if(moveOrder == null){
                return false;
            }
@@ -136,7 +137,7 @@ var  Piece = function(playerId) {
            }
 
            //Should have each move type
-           return moveOrder.indexof(Direction.UP)>-1 && moveOrder.inedxOf(Direction.DOWN)>-1 &&
+           return moveOrder.indexOf(Direction.UP)>-1 && moveOrder.indexOf(Direction.DOWN)>-1 &&
                    moveOrder.indexOf(Direction.LEFT)>-1 && moveOrder.indexOf(Direction.RIGHT)>-1;
        }
 
@@ -144,7 +145,7 @@ var  Piece = function(playerId) {
            if(this._isDead == false) {
                var numberOfDirection = 4;
                Object.freeze(numberOfDirection) ;
-               if (this._location != null && _isValidProgram(this._program)) {
+               if (this._location != null && that._isValidProgram(this._program)) {
                    //Search for valid move
                    for (i = this._moveCount; i < this._moveCount + numberOfDirection; i++) {
                        var nextMove = this._program.get((i) % numberOfDirection);
@@ -167,7 +168,7 @@ var  Piece = function(playerId) {
 
 
     Piece.prototype.programPiece=function(moveOrder){
-        if(isValidProgram(moveOrder)){
+        if(_isValidProgram(moveOrder)){
             this._program=moveOrder;
         }
     }
@@ -641,7 +642,7 @@ function Game (){
            edges.map(function(rep){
             var nodeId1 = parseInt(rep[0]);
             var nodeId2 = parseInt(rep[1]);
-            var node1 = nodes.inedxOf(nodeId1);
+            var node1 = nodes.indexOf(nodeId1);
             var node2 = nodes.indexOf(nodeId2);
             node1.connect(node2);
             node2.connect(node1);
@@ -779,7 +780,7 @@ function Game (){
             return {
                 getInstance: getInstance,
                 registerPlayer: registerPlayer,
-                receiveMoves: receiveMoves,
+                receiveMoves: receiveMoves, //
                 createBoard: createBoard,
                 toString:toString,
                 getMessages: getMessages,
