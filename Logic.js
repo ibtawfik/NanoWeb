@@ -780,7 +780,7 @@ function Game (){
             return {
                 getInstance: getInstance,
                 registerPlayer: registerPlayer,
-                receiveMoves: receiveMoves, //
+                receiveMoves: receiveMoves,
                 createBoard: createBoard,
                 toString:toString,
                 getMessages: getMessages,
