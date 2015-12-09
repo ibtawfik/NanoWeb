@@ -3,11 +3,9 @@
  */
 'use strict';
 angular.module('myApp')
-    .controller('Ctrl', ['$scope','bSLogicService',
-
-            function ($scope, bSLogicService) {
-
-                var board = bSLogicService.getBoard();
+      .controller('Ctrl', ['$scope','Logic',
+        function ($scope, Logic) {
+                var board = Logic.getBoard();
 
                 $scope.isVoid = function(row,column){
                         return board[row,column].state === "void";
@@ -56,8 +54,8 @@ angular.module('myApp')
 
                 };
                 $scope.update=function(row,column,player){
-                        if(bSLogicService.isValidMove(row,column,player)){
-                                bSLogicService.makeMove(row,column,player);
+                        if(Logic.isValidMove(row,column,player)){
+                                Logic.makeMove(row,column,player);
                         }
                 }
 

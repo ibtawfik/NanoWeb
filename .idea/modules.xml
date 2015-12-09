@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Nano.iml" filepath="$PROJECT_DIR$/.idea/Nano.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/NanoWeb.iml" filepath="$PROJECT_DIR$/.idea/NanoWeb.iml" />
     </modules>
   </component>
 </project>
