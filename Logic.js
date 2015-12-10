@@ -4,7 +4,7 @@
 
     angular.module('myApp', []).factory('Logic',
         function () {
-            var playerTurn=PlayerId.ONE;
+
             var gameMode = Object.freeze({
                 P2P: 0,
                 P2C: 1
@@ -18,12 +18,12 @@
             });
 
             var Status = Object.freeze({
-                EATEN_P1: 0,
-                EATEN_P2: 1,
-                FREE: 2,
-                OCCUPIED_P1: 3,
-                OCCUPIED_P2: 4,
-                VOID: 5
+                EATEN_P1: "captured_one",
+                EATEN_P2: "captured_two",
+                FREE: "free",
+                OCCUPIED_P1: "occupied_one",
+                OCCUPIED_P2: "occupied_two",
+                VOID: "void"
             });
 
             var PlayerId = Object.freeze({
@@ -31,7 +31,7 @@
                 TWO: 1
             });
 
-
+            var playerTurn=PlayerId.ONE;
             var Player = function (playerId, pieces, playerName) {
 
                 this._playerId = playerId;
@@ -227,7 +227,7 @@
                 this.id = 0;//id;
                 // this._xLoc = xLoc;
                 //  this._yLoc = yLoc;
-                this._status = Status.FREE;
+                this.status = Status.FREE;
                 // @JsonIgnore
                 this.up = null;
                 // @JsonIgnore
@@ -237,8 +237,8 @@
                 // @JsonIgnore
                 this.right = null;
 
-                this._occupant = null;
-                this._desireOccupancy = [];
+                this.occupant = null;
+                this.desireOccupancy = [];
             }
 
             Node.prototype.getId = function () {
@@ -251,7 +251,7 @@
                 var left = _nullCheck(this.left);
                 var right = _nullCheck(this.right);
 
-                return this.id + "," + this._xLoc + "," + this._yLoc + "," + this._status + "," + this.up + "," + this.down + "," + this.left + "," + this.right;
+                return this.id + "," + this._xLoc + "," + this._yLoc + "," + this.status + "," + this.up + "," + this.down + "," + this.left + "," + this.right;
             }
 
             Node.prototype._nullCheck = function (node) {
@@ -296,32 +296,32 @@
 
 
             Node.prototype.isFree = function () {
-                return this._status.equals(Status.FREE);
+                return this.status.equals(Status.FREE);
             }
 
             Node.prototype = function (direction) {
                 switch (direction) {
                     case Direction.UP:
-                        up.place(this._occupant);
-                        this._occupantplaceOnNode(up);
+                        up.place(this.occupant);
+                        this.occupantplaceOnNode(up);
                         break;
                     case Direction.DOWN:
-                        down.place(this._occupant);
-                        this._occupant.placeOnNode(down);
+                        down.place(this.occupant);
+                        this.occupant.placeOnNode(down);
                         break;
                     case Direction.LEFT:
-                        left.place(this._occupant);
-                        this._occupant.placeOnNode(left);
+                        left.place(this.occupant);
+                        this.occupant.placeOnNode(left);
                         break;
                     case Direction.RIGHT:
-                        right.place(this._occupant);
-                        this._occupant.placeOnNode(right);
+                        right.place(this.occupant);
+                        this.occupant.placeOnNode(right);
                         break;
                 }
             }
 
             Node.prototype.place = function (piece) {
-                this._desireOccupancy.add(piece);
+                this.desireOccupancy.add(piece);
             }
 
             /**
@@ -329,18 +329,18 @@
              */
             Node.prototype.moveTime = function (playerWithPriority) {
                 //First check if the node is currently occupied. If so then move the occupant along
-                if (this._occupant != null) {
-                    if (this._occupant.getPlayerId() == (PlayerId.ONE)) {
-                        this._status = Status.EATEN_P1;
+                if (this.occupant != null) {
+                    if (this.occupant.getPlayerId() == (PlayerId.ONE)) {
+                        this.status = Status.EATEN_P1;
                     } else {
-                        this._status = Status.EATEN_P2;
+                        this.status = Status.EATEN_P2;
                     }
                 }
 
                 var occuopantSelected = false;
                 var newPieces = [];
 
-                this._desireOccupancy.map(function (piece) {
+                this.desireOccupancy.map(function (piece) {
 
                         if (piece.getPreviousDirection() != null) {
                             //First order is piece that moved up to get here
@@ -395,64 +395,108 @@
                     }
                 })
 
-                this._desireOccupancy.clear();
+                this.desireOccupancy.clear();
 
             }
 
 
             Node.prototype._occupy = function (piece) {
-                this._occupant = piece;
+                this.occupant = piece;
                 if (piece.getPlayerId() == PlayerId.ONE) {
-                    this._status = Status.OCCUPIED_P1;
+                    this.status = Status.OCCUPIED_P1;
                 } else {
-                    this._status = Status.OCCUPIED_P2;
+                    this.status = Status.OCCUPIED_P2;
                 }
             };
 
             Node.prototype.getStatus = function () {
-                return this._status;
+                return this.status;
             }
 
 
             this._game = null;
 
             var sampleObject = {
-                _status: "void",
-                left: false,
+                status: "void",
+                left: true,
                 right: false,
                 top: true,
                 bottom: false
             };
 
             var sampleObject2 = {
-                _status: "void",
+                status: "void",
                 left: false,
                 right: true,
                 top: true,
                 bottom: true
             };
 
-           // var sampleObject = new Node()
+           var objectx  = Object.create(Node);
+                 objectx.status= Status.EATEN_P1
+                objectx.left= false
+                objectx.right= true
+                objectx.top= true,
+                objectx.bottom=true
+
+            var objectx2  = Object.create(Node);
+            objectx2.status= Status.VOID;
+            objectx2.left= false
+            objectx2.right= false
+            objectx2.top= false,
+                objectx2.bottom=true
+
+            var objectx3  = Object.create(Node);
+            objectx3.status= Status.OCCUPIED_P1;
+            objectx3.left= false
+            objectx3.right= false
+            objectx3.top= false,
+                objectx3.bottom=true
+
+            var objectx4  = Object.create(Node);
+            objectx4.status= Status.OCCUPIED_P2;
+            objectx4.left= false
+            objectx4.right= false
+            objectx4.top= false,
+                objectx4.bottom=true
+
+            var board=[];
+            for (var i=0;i<15;i++){
+                var row =[];
+                for (var j=0;j<15;j++){
+                    var obj;
+                    var randint = Math.floor(Math.random()*5)
+                    switch (randint){
+                        case 0:obj=objectx;break;
+                        case 1:obj=objectx2;break;
+                        case 2:obj=objectx3;break;
+                        case 3:obj=objectx4;break;
+                        default:obj=objectx;
+                    }
+                    row.push(obj)
+                }
+              board.push(row);
+              }
 
 
 
-            var board =
+         /*   var board =
                 [[sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject],
                     [sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject],
                     [sampleObject2, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject],
-                    [sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject],
-                    [sampleObject, sampleObject2, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject],
-                    [sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject],
+                    [sampleObject, sampleObject2, sampleObject2, sampleObject2, sampleObject2, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject],
+                    [sampleObject, sampleObject2, sampleObject2, sampleObject2, sampleObject2, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject],
+                    [sampleObject, sampleObject, sampleObject, sampleObject, sampleObject2, sampleObject2, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject],
                     [sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject],
                     [sampleObject2, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject],
                     [sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject],
+                    [sampleObject, sampleObject, sampleObject, sampleObject2, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject],
+                    [sampleObject, sampleObject, sampleObject, sampleObject, sampleObject2, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject],
                     [sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject],
-                    [sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject],
-                    [sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject],
-                    [sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject],
+                    [sampleObject, sampleObject, sampleObject, sampleObject2, sampleObject, sampleObject2, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject],
                     [sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject],
                     [sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject, sampleObject]
-                ];
+                ];*/
 
 
             var player1;
