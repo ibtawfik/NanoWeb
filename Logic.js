@@ -490,7 +490,33 @@
                 }
               board.push(row);
               }
+            for (var i=0;i<boardSize;i++)
+                for (var j=0;j<boardSize;j++){
+                    if (i==0)
+                        board[i][j].up=false;
+                    if (j===0)
+                        board[i][j].left=false;
+                    if (j===boardSize-1)
+                        board[i][j].down=false;
 
+                    if (i===boardSize-1)
+                        board[i][j].right=false;
+
+
+                    if (board[i][j].up==true && i>0)
+                        board[i-1][j].down=true;
+
+                    if (board[i][j].down==true && i<boardSize-1)
+                        board[i+1][j].up=true;
+
+                    if (board[i][j].left==true && j>0)
+                        board[i][j-1].right=true;
+
+                    if (board[i][j].right==true &&  j<boardSize-1)
+                        board[i][j+1].left=true;
+
+
+                }
             var player1;
             var player2;
             var timeStep;
