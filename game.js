@@ -6,13 +6,13 @@ angular.module('myApp')
       .controller('Ctrl', ['$scope','Logic',
         function ($scope, Logic) {
                 var board = Logic.getBoard();
-                var player = 0;
+                var player = Logic.currentPlayer();
                 $scope.isVoid = function(row,column){
-                        return board[row][column].state === "void";
+                        return board[row][column].status === "void";
                 };
 
                 $scope.isFree = function(row,column){
-                        return board[row][column].state === "free";
+                        return board[row][column].status === "free";
                 };
 
                 $scope.isConnectedLeft = function(row,column){
@@ -32,21 +32,23 @@ angular.module('myApp')
                 };
 
                 $scope.isTakenPlayerOne=function(row,column){
-                        return board[row][column].state === "captured_one";
+                        return board[row][column].status === "captured_one" ||
+                            board[row][column].status === "occupied_one";
                 };
 
                 $scope.isTakenPlayerTwo=function(row,column){
-                        return board[row][column].state === "captured_two";
+                        return board[row][column].status === "captured_two" ||
+                            board[row][column].status === "occupied_two";
                 };
 
                 $scope.shouldShowImage=function(row,column){
-                        return board[row][column].state === "occupied_one" || board[row][column].state === "occupied_two";
+                        return board[row][column].status === "occupied_one" || board[row][column].status === "occupied_two";
                 };
 
                 $scope.imageLink=function(row,column){
-                        if(board[row][column].state === "occupied_one"){
+                        if(board[row][column].status === "occupied_one"){
                                 return "bertleft.png";
-                        }else if(board[row][column].state === "occupied_two"){
+                        }else if(board[row][column].status === "occupied_two"){
                                 return "coily.png";
                         }else{
                                 return false;
@@ -54,12 +56,13 @@ angular.module('myApp')
 
                 };
                 $scope.update=function(row,column){
+                        console.log(player);
                         if(Logic.isValidMove(row,column,player)){
                                 Logic.makeMove(row,column,player);
-                                player=!player;
                         }
-                }
-                $scope.setGameMode=function(gamdeMode){
+                };
+
+                $scope.setGameMode=function(gameMode){
                         Logic.setGameMode(gameMode);
                 }
 
