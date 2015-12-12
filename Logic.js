@@ -36,7 +36,7 @@
             var numPieces = 5;
             var boardSize=15;
             var Player = function (playerId, pieces, playerName) {
-
+                var that = this
                 this._playerId = playerId;
                 this._playerName = playerName;
 
@@ -54,7 +54,7 @@
 
                 this.advanceTime = function () {
                     //For all inplay pieces move them
-                    this._inPlay.forEach(function (piece) {
+                    that._inPlay.forEach(function (piece) {
                         piece.advance()
                     });
                     //If any of the pieces become dead then remove from the inplay
@@ -71,7 +71,7 @@
                         nextPiece.programPiece(program);
                         nextPiece.placeOnNode(node);
                         node.place(nextPiece);
-                        this._inPlay.push(nextPiece);
+                        that._inPlay.push(nextPiece);
                         return true;
                     } else {
                         return false;
@@ -96,11 +96,11 @@
                 };
 
                 var clearDead = function () {
-                    var i = this._inPlay.length;
+                    var i = that._inPlay.length;
                     while (i--) {
-                        if (this._inPlay[i].isDead()) {
-                            var piece = this._inPlay.splice(i, 1);
-                            this._dead.push(piece);
+                        if (that._inPlay[i].isDead()) {
+                            var piece = that._inPlay.splice(i, 1);
+                            that._dead.push(piece);
                         }
                     }
                 };
@@ -118,12 +118,12 @@
                 };
 
                 this.inPlayCount = function () {
-                    return this._inPlay.length;
+                    return that._inPlay.length;
                 };
 
                 this.getScore = function () {
                     var score = 0;
-                    this._inPlay.map(function (piece) {
+                    that._inPlay.map(function (piece) {
                         score = score + piece.getNodesEaten();
                     });
                     this._dead.map(function (piece) {
@@ -163,7 +163,7 @@
                         if (this._location != null ) {
                             //Search for valid move
                             for (var i = this._moveCount; i < this._moveCount + numberOfDirection; i++) {
-                                var nextMove = this._program.get((i) % numberOfDirection);
+                                var nextMove = this._program.indexOf((i) % numberOfDirection);
 
                                 if (this._location.canMove(nextMove)) {
                                     this._location.move(nextMove);
@@ -204,7 +204,7 @@
 
                 this.getPreviousDirection = function () {
                     if (this._moveCount > 0) {
-                        return this._program.get((this._moveCount - 1) % 4);
+                        return this._program.indexOf((this._moveCount - 1) % 4);
                     } else {
                         return null;
                     }
@@ -224,9 +224,10 @@
 
 
 
-            var Node = function () {
-
-                this.id = 0;//id;
+            var Node = function (row,col) {
+                var that = this
+                this.row=row
+                this.col=col
                 // this._xLoc = xLoc;
                 //  this._yLoc = yLoc;
                 this.status = Status.FREE;
@@ -249,35 +250,58 @@
 
                         switch (direction) {
                             case Direction.UP:
-                                if (up == null) {
+                                if (that.up == null ||that.row==0) {
                                     return false;
                                 } else {
-                                    return up.isFree();
+                                    return board[that.row-1][that.col].isFree();
                                 }
                             case Direction.DOWN:
-                                if (down == null) {
+                                if (that.down == null || that.row==boardSize-1) {
                                     return false;
                                 } else {
-                                    return down.isFree();
+                                    return board[that.row+1][that.col].isFree();
                                 }
                             case Direction.LEFT:
-                                if (left == null) {
+                                if (that.left == null || that.col===0) {
                                     return false;
                                 } else {
-                                    return left.isFree();
+                                    return board[that.row][that.col-1].isFree();
                                 }
                             case Direction.RIGHT:
-                                if (right == null) {
+                                if (that.right == null|| that.col==boardSize-1) {
                                     return false;
                                 } else {
-                                    return right.isFree();
+                                    return board[that.row][that.col+1].isFree();
                                 }
                             default:
                                 return false;
                         }
                     }
+
+                this.move=function(direction){
+                    var node;
+                    switch (direction){
+                        case Direction.UP:
+                            node = board[that.row-1][that.col]
+
+                            break;
+                        case Direction.DOWN:
+                            node = [that.row+1][that.col];
+
+                            break;
+                        case Direction.LEFT:
+                            node=board[that.row][that.col-1];
+                            break;
+                        case Direction.RIGHT:
+                            node=board[that.row][that.col+1];
+                            break;
+                    }
+                    node.place(that.occupant);
+                    that.occupant.placeOnNode(node);
+                }
+
                 this.place = function (piece) {
-                    this.desireOccupancy.push(piece);
+                    that.desireOccupancy.push(piece);
                 }
 
                 /**
@@ -301,7 +325,7 @@
                             if (piece.getPreviousDirection() != null) {
                                 //First order is piece that moved up to get here
                                 if (piece.getPreviousDirection() == (Direction.UP)) {
-                                    this._occupy(piece);
+                                    that._occupy(piece);
                                     occuopantSelected = true;
                                 }
 
@@ -310,7 +334,7 @@
                                     if (occuopantSelected) {
                                         piece.killPiece();
                                     } else {
-                                        this._occupy(piece);
+                                        that._occupy(piece);
                                         occuopantSelected = true;
                                     }
                                 }
@@ -320,7 +344,7 @@
                                     if (occuopantSelected) {
                                         piece.killPiece();
                                     } else {
-                                        this._occupy(piece);
+                                        that._occupy(piece);
                                         occuopantSelected = true;
                                     }
                                 }
@@ -330,7 +354,7 @@
                                     if (occuopantSelected) {
                                         piece.killPiece();
                                     } else {
-                                        this._occupy(piece);
+                                        that._occupy(piece);
                                         occuopantSelected = true;
                                     }
                                 }
@@ -346,7 +370,7 @@
                         if (occuopantSelected || (newPieces.length > 1 && piece.getPlayerId() != playerWithPriority)) {
                             piece.killPiece();
                         } else {
-                            this._occupy(piece);
+                            that._occupy(piece);
                             occuopantSelected = true;
                         }
                     });
@@ -460,6 +484,8 @@
                         case 3:obj=objectx4;break;
                         default:obj=objectx;
                     }
+                    obj.row=i;
+                    obj.col=j;
                     row.push(obj)
                 }
               board.push(row);
