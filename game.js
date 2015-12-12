@@ -6,7 +6,7 @@ angular.module('myApp')
       .controller('Ctrl', ['$scope','Logic',
         function ($scope, Logic) {
                 var board = Logic.getBoard();
-
+                var player = 0;
                 $scope.isVoid = function(row,column){
                         return board[row][column].state === "void";
                 };
@@ -53,10 +53,14 @@ angular.module('myApp')
                         }
 
                 };
-                $scope.update=function(row,column,player){
+                $scope.update=function(row,column){
                         if(Logic.isValidMove(row,column,player)){
                                 Logic.makeMove(row,column,player);
+                                player=!player;
                         }
+                }
+                $scope.setGameMode=function(gamdeMode){
+                        Logic.setGameMode(gameMode);
                 }
 
             }]);
