@@ -132,7 +132,7 @@
 
                     return score;
                 }
-            }
+            };
 
             var Piece = function (playerId) {
                 this._playerId = playerId;
@@ -373,11 +373,11 @@
                             that._occupy(piece);
                             occuopantSelected = true;
                         }
-                    })
+                    });
 
                     this.desireOccupancy=[];
 
-                }
+                };
 
 
                 this._occupy = function (piece) {
@@ -392,11 +392,11 @@
                 this.getStatus = function () {
                     return this.status;
                 }
-            }
+            };
 
             Node.prototype.getId = function () {
                 return this.id;
-            }
+            };
 
             Node.prototype.toString = function () {
                 var up = _nullCheck(this.up);
@@ -405,7 +405,7 @@
                 var right = _nullCheck(this.right);
 
                 return this.id + "," + this._xLoc + "," + this._yLoc + "," + this.status + "," + this.up + "," + this.down + "," + this.left + "," + this.right;
-            }
+            };
 
             Node.prototype._nullCheck = function (node) {
                 if (node == null) {
@@ -673,12 +673,16 @@
                     player2 = new Player(PlayerId.TWO, numPieces, playerName);
                 }
             }
+            function currentPlayer(){
+                return playerTurn;
+            }
             return {
                 setGameMode: setGameMode,
                 isValidMove: isValidMove,
                 getBoard: getBoard,
                 makeMove: makeMove,
-                createPlayer:createPlayer
+                createPlayer:createPlayer,
+                currentPlayer:currentPlayer
             };
 
 
