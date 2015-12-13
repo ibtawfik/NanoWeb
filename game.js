@@ -3,8 +3,8 @@
  */
 'use strict';
 angular.module('myApp')
-      .controller('Ctrl', ['$scope','Logic',
-        function ($scope, Logic) {
+      .controller('Ctrl', ['$scope','Logic','$interval',
+        function ($scope, Logic, $interval) {
                 var board = Logic.getBoard();
 
                 var stored;
@@ -73,6 +73,9 @@ angular.module('myApp')
                         console.log("TURN COMPLETE");
                         Logic.completeTurn();
                         console.log(Logic.getBoard());
+                        if (Logic.noMorePieces()){
+                                $interval(Logic.advanceTime,1000);
+                        }
                 };
 
                 $scope.store = function(row,column){

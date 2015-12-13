@@ -33,7 +33,7 @@
 
             var playerTurn=PlayerId.ONE;
             var myGameMode=gameMode.P2P;
-            var numPieces = 7;
+            var numPieces = 2;
             var boardSize=15;
             var Player = function (playerId, pieces, playerName) {
                 var that = this
@@ -656,15 +656,24 @@
                 return playerTurn;
             }
 
-            function completeTurn(){
-                if(playerTurn == PlayerId.TWO) {
+            function completeTurn() {
+                if (playerTurn == PlayerId.TWO) {
                     advanceTime();
                     p1_nextMove = null;
                     p2_nextMove = null;
                 }
-                 playerTurn = playerTurn===PlayerId.ONE?PlayerId.TWO:PlayerId.ONE;
-
+                playerTurn = playerTurn === PlayerId.ONE ? PlayerId.TWO : PlayerId.ONE;
+            }
+               /* if (player1.unusedCount()==0 &&player2.unusedCount()==0 )
+                while (player1.deadCount()<numPieces && player2.deadCount()<numPieces){
+                    advanceTime();
                 }
+
+                }*/
+
+            function noMorePieces(){
+                return player1.unusedCount()==0 && player2.unusedCount()==0
+            }
 
 
             return {
@@ -674,7 +683,10 @@
                 makeMove: makeMove,
                 createPlayer:createPlayer,
                 currentPlayer:currentPlayer,
-                completeTurn:completeTurn
+                completeTurn:completeTurn,
+                noMorePieces:noMorePieces,
+                advanceTime:advanceTime
+
             };
 
 
