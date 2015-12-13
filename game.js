@@ -173,6 +173,10 @@ angular.module('myApp')
                         newGame(numberOfPlayers, player1Name, player2Name);
                 };
 
-
+                $scope.isTurn = function(player){
+                        if(player === Logic.currentPlayer()){
+                                return "success";
+                        }
+                }
 
             }]);
