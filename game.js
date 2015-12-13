@@ -46,7 +46,6 @@ angular.module('myApp')
                 };
 
                 $scope.imageLink=function(row,column){
-                        console.log ("IMAGECHECK")
                         if(board[row][column].status === "occupied_one"){
                                 return "/bertleft.png";
                         }else if(board[row][column].status === "occupied_two"){
@@ -57,10 +56,11 @@ angular.module('myApp')
 
                 };
                 $scope.update=function(row,column){
-                        console.log(player);
                         if(Logic.isValidMove(row,column,player)){
                                 Logic.makeMove(row,column,player,["UP","DOWN","LEFT","RIGHT"]);
                         }
+                        console.log(row + " " + column)
+                        console.log(Logic.getBoard()[row][column])
                 };
 
                 $scope.setGameMode=function(gameMode){
