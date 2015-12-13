@@ -58,7 +58,7 @@ angular.module('myApp')
                 function update (row,column,directions){
                         stored = null;
                         if(Logic.isValidMove(row,column,player)){
-                                Logic.makeMove(row,column,player,format(direction));
+                                Logic.makeMove(row,column,player,format(directions));
                         }
                         console.log(row + " " + column);
                         console.log(Logic.getBoard()[row][column])
