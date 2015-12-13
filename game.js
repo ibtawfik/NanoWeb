@@ -88,17 +88,22 @@ angular.module('myApp')
                 };
 
                 $scope.getLeft=function(){
-                        return 10;
+                        if(stored){
+                                return stored.r * 6.66;
+                        }
                 };
 
                 $scope.getTop=function(){
-                        return 50;
+                        if(stored){
+                                return stored.c * 6.66 * .75;
+                        }
                 };
 
                 $scope.test = function(element){
                         if(element.keyCode == 13){
                                 var elem = element.srcElement || element.target;
                                validateProgram(elem.value);
+                                elem.value = '';
                         }
                 };
 
