@@ -50,8 +50,6 @@ angular.module('myApp')
                                 return "/bertleft.png";
                         }else if(board[row][column].status === "occupied_two"){
                                 return "/coily.png";
-                        }else{
-                                return "/Nano/coily.png";//false;
                         }
 
                 };
@@ -59,12 +57,17 @@ angular.module('myApp')
                         if(Logic.isValidMove(row,column,player)){
                                 Logic.makeMove(row,column,player,["UP","DOWN","LEFT","RIGHT"]);
                         }
-                        console.log(row + " " + column)
+                        console.log(row + " " + column);
                         console.log(Logic.getBoard()[row][column])
                 };
 
                 $scope.setGameMode=function(gameMode){
                         Logic.setGameMode(gameMode);
+                };
+
+                $scope.completeTurn=function(){
+                        console.log("TURN COMPLETE");
+                        Logic.completeTurn();
                 }
 
             }]);
