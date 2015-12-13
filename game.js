@@ -6,7 +6,7 @@ angular.module('myApp')
       .controller('Ctrl', ['$scope','Logic',
         function ($scope, Logic) {
                 var board = Logic.getBoard();
-                var player = Logic.currentPlayer();
+
                 var stored;
                 $scope.isVoid = function(row,column){
                         return board[row][column].status === "void";
@@ -25,11 +25,11 @@ angular.module('myApp')
                 };
 
                 $scope.isConnectedTop = function(row,column){
-                        return board[row][column].top === true;
+                        return board[row][column].up === true;
                 };
 
                 $scope.isConnectedBottom = function(row,column){
-                        return board[row][column].bottom === true;
+                        return board[row][column].down === true;
                 };
 
                 $scope.isTakenPlayerOne=function(row,column){
@@ -57,6 +57,7 @@ angular.module('myApp')
 
                 function update (row,column,directions){
                         stored = null;
+                        var player = Logic.currentPlayer();
                         if(Logic.isValidMove(row,column,player)){
                                 Logic.makeMove(row,column,player,format(directions));
                         }
@@ -71,6 +72,7 @@ angular.module('myApp')
                 $scope.completeTurn=function(){
                         console.log("TURN COMPLETE");
                         Logic.completeTurn();
+                        console.log(Logic.getBoard());
                 };
 
                 $scope.store = function(row,column){
