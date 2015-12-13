@@ -145,4 +145,16 @@ angular.module('myApp')
                         return returnVals;
                 }
 
+                $scope.newGame = function(numberOfPlayers){
+                        Logic.newGame(numberOfPlayers);
+                };
+
+                $scope.getScore = function(playerNumber){
+                        Logic.getScore(playerNumber);
+                };
+
+                $scope.getRemainingMoves = function(playerNumber){
+                        Logic.getRemainingMoves(playerNumber);
+                };
+
             }]);

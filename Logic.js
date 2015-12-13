@@ -664,7 +664,20 @@
                 }
                  playerTurn = playerTurn===PlayerId.ONE?PlayerId.TWO:PlayerId.ONE;
 
-                }
+            }
+
+
+            function newGame(numberOfPlayers){
+
+            }
+
+            function getScore(playerNumber){
+
+            }
+
+            function getRemainingMoves(playerNumber){
+
+            }
 
 
             return {
@@ -674,7 +687,10 @@
                 makeMove: makeMove,
                 createPlayer:createPlayer,
                 currentPlayer:currentPlayer,
-                completeTurn:completeTurn
+                completeTurn:completeTurn,
+                newGame:newGame,
+                getScore:getScore,
+                getRemainingMoves:getRemainingMoves
             };
 
 

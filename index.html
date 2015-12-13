@@ -8,7 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
     <script crossorigin="anonymous" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.js"></script>
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="game.css">
 
 
@@ -40,12 +42,42 @@
         </div>
     </div>
 
+    <form style="top: 50%;left:50%; height: 25%; width: 25%; position: absolute;">
+        Player1:
+        <input type="text" name="name">
+        <br>
+        Player2:
+        <input type="text" name="name">
+    </form>
+
+
+
     <input ng-show="showDirectionInput()" ng-keypress="test($event)" style ="position:absolute; left:{{getLeft()}}%; top:{{getTop()}}%; width: 6.66%; height: 6.66%;;"  type="text" class="form-control" placeholder="UDLR" autofocus>
     <input class="">
     <div style="position: absolute; right: 0px;top: 0px; width:25%; height: 100%; border: solid;">
-    <button type="button" ng-click="newGame()">New Game</button>
+        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+            New Game
+        </button>
     <button type="button"  ng-click="completeTurn()">Complete Turn</button>
 </div>
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 </body>
