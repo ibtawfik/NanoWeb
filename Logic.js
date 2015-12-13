@@ -667,7 +667,7 @@
             }
 
 
-            function newGame(numberOfPlayers){
+            function newGame(numberOfPlayers, player1Name, player2Name){
 
             }
 

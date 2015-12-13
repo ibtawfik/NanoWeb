@@ -145,9 +145,9 @@ angular.module('myApp')
                         return returnVals;
                 }
 
-                $scope.newGame = function(numberOfPlayers){
-                        Logic.newGame(numberOfPlayers);
-                };
+                function newGame (numberOfPlayers, player1Name, player2Name){
+                        Logic.newGame(numberOfPlayers, player1Name, player2Name);
+                }
 
                 $scope.getScore = function(playerNumber){
                         Logic.getScore(playerNumber);
@@ -156,5 +156,20 @@ angular.module('myApp')
                 $scope.getRemainingMoves = function(playerNumber){
                         Logic.getRemainingMoves(playerNumber);
                 };
+
+                $scope.start = function(){
+                        var player1Name = document.getElementById("p1Name").value;
+                        var player2Name = document.getElementById("p2Name").value;
+                        var numberOfPlayers = numberOfPlayers(document.getElementById("numPlayers"));
+                        newGame(numberOfPlayers, player1Name, player2Name);
+                }
+
+                function numberOfPlayers(checkbox){
+                        if(checkbox.checked){
+                                return 2;
+                        }else{
+                                return 1;
+                        }
+                }
 
             }]);
