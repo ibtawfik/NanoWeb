@@ -33,7 +33,7 @@
 
             var playerTurn=PlayerId.ONE;
             var myGameMode=gameMode.P2P;
-            var numPieces = 5;
+            var numPieces = 7;
             var boardSize=15;
             var Player = function (playerId, pieces, playerName) {
                 var that = this
@@ -44,7 +44,7 @@
                 this._inPlay = [];
                 this._dead = [];
 
-                this._nextMove = ["UP","DOWN","LEFT","RIGHT"];//""; //default
+                this._nextMove = null;// ["UP","DOWN","LEFT","RIGHT"];//""; //default
 
 
                 for (var i = 0; i < pieces; i++) {
@@ -71,6 +71,7 @@
                         nextPiece.programPiece(program);
                         nextPiece.placeOnNode(node);
                         node.place(nextPiece);
+                        node._occupy(nextPiece);
                         that._inPlay.push(nextPiece);
                         return true;
                     } else {
@@ -301,7 +302,7 @@
                 }
 
                 this.place = function (piece) {
-                    that.desireOccupancy.push(piece);
+                    this.desireOccupancy.push(piece);
                 }
 
                 /**
@@ -381,16 +382,16 @@
 
 
                 this._occupy = function (piece) {
-                    that.occupant = piece;
+                    this.occupant = piece;
                     if (piece.getPlayerId() == PlayerId.ONE) {
-                        that.status = Status.OCCUPIED_P1;
+                        this.status = Status.OCCUPIED_P1;
                     } else {
-                        that.status = Status.OCCUPIED_P2;
+                        this.status = Status.OCCUPIED_P2;
                     }
                 };
 
                 this.getStatus = function () {
-                    return that.status;
+                    return this.status;
                 }
             };
 
@@ -533,27 +534,6 @@
             player1 = new Player(PlayerId.ONE, numPieces,"PLAYER1");
             player2 = new Player(PlayerId.TWO, numPieces, "PLAYER2");
 
-           /* this.receiveMoves = function (player, move) {
-
-                if (player1 != null && player == 1) {
-                    p1_nextMove = move;
-                    player1.setNextMove(p1_nextMove);
-                } else if (player2 != null && player == 2) {
-                    p2_nextMove = move;
-                    player2.setNextMove(p2_nextMove);
-                }
-
-                if (player1 != null && player2 != null) {
-                    if (player1.getNextMove() != null && player2.getNextMove() != null) {
-                        makeMove();
-                        p1_nextMove = null;
-                        p2_nextMove = null;
-                    }
-                }
-            }*/
-
-
-
             function advantage() {
                 var player = Math.random();
                 if (player > (0.5)) {
@@ -571,8 +551,6 @@
                             board[i][j].moveTime(advantage);}
                         }
                 });
-
-
                 player1.advanceTime();
                 player2.advanceTime();
                 timeStep++;
@@ -607,14 +585,12 @@
                                 program.push(Direction.LEFT);
                             } else if (value === "right") {
                                 program.push(Direction.RIGHT);
-                            }
-                      //  }
+                            }}
 
                         var node = board[row][col];
 
                         player.place(node, program);
 
-                    }
                 }
 
                 if (player == player1) {
@@ -639,11 +615,13 @@
 
             function isValidMove(row, column, player) {
                 var node = board[row][column];
-                return node.status===Status.FREE && player === playerTurn;
+                return node.status===Status.FREE;// && player === playerTurn;
             }
 
             function makeMove (row, col, player,program) {
-                playerTurn = !playerTurn;
+                playerTurn = playerTurn===PlayerId.ONE?PlayerId.TWO:PlayerId.ONE;
+//                console.log("ADVANTAGE: " + a);
+                var a = player;
                 if(player == PlayerId.ONE){
                     p1_nextMove = program;
                     player1.setNextMove(p1_nextMove);
@@ -651,7 +629,7 @@
                     p2_nextMove = program;
                     player2.setNextMove(p2_nextMove);
                 }
-                    movePieces(row,col);
+                    movePieces(row,col,a);
                 if(player == PlayerId.TWO) {
                     advanceTime(a);
                     p1_nextMove = null;
@@ -660,9 +638,8 @@
                 }
 
 
-               function movePieces(row,col){
+               function movePieces(row,col,a){
 
-                var a = advantage();
                 if (a === (PlayerId.ONE)) {
                     move(row, col, player1);
                 }   else {
