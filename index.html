@@ -40,10 +40,11 @@
         </div>
     </div>
 
-    <input ng-show="showDirectionInput()" ng-keypress="test($event)" style ="position:absolute; top:{{getLeft()}}%; left:{{getTop()}}%; width: 6.66%; height: 6.66%;;"  type="text" class="form-control" placeholder="UDLR" autofocus>
-<div style="">
-    <div></div>
-    <button type="button" style="position: absolute; right: 0px;top: 10px; width:25%" ng-click="completeTurn()">Complete Turn</button>
+    <input ng-show="showDirectionInput()" ng-keypress="test($event)" style ="position:absolute; left:{{getLeft()}}%; top:{{getTop()}}%; width: 6.66%; height: 6.66%;;"  type="text" class="form-control" placeholder="UDLR" autofocus>
+    <input class="">
+    <div style="position: absolute; right: 0px;top: 0px; width:25%; height: 100%; border: solid;">
+    <button type="button" ng-click="newGame()">New Game</button>
+    <button type="button"  ng-click="completeTurn()">Complete Turn</button>
 </div>
 
 

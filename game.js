@@ -89,13 +89,13 @@ angular.module('myApp')
 
                 $scope.getLeft=function(){
                         if(stored){
-                                return stored.r * 6.66;
+                                return stored.c * 6.66 * .75;
                         }
                 };
 
                 $scope.getTop=function(){
                         if(stored){
-                                return stored.c * 6.66 * .75;
+                                return stored.r * 6.66;
                         }
                 };
 
