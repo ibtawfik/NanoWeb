@@ -42,20 +42,23 @@ angular.module('myApp')
                 };
 
                 $scope.shouldShowImage=function(row,column){
-                        return board[row][column].status === "occupied_one" || board[row][column].status === "occupied_two";
+                var show = board[row][column].status === "occupied_one" || board[row][column].status === "occupied_two";
+                        return show;
                 };
 
                 $scope.imageLink=function(row,column){
+                        var node =board[row][column];
                         if(board[row][column].status === "occupied_one"){
-                                return "/bertleft.png";
+                                return "/Nano/bertleft.png";
                         }else if(board[row][column].status === "occupied_two"){
-                                return "/coily.png";
+                                return "/Nano/coily.png";
                         }else{
-                                return "/Nano/coily.png";//false;
+                                return false;
                         }
 
                 };
                 $scope.update=function(row,column){
+                        var player = Logic.currentPlayer();
                         if(Logic.isValidMove(row,column,player)){
                                 Logic.makeMove(row,column,player,["UP","DOWN","LEFT","RIGHT"]);
                         }
