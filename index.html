@@ -12,7 +12,6 @@
     <link rel="stylesheet" type="text/css" href="game.css">
 
 
-   <!-- <script src="BSLogicService.js"></script>-->
     <script src="Logic.js"></script>
     <script src="game.js"></script>
 
@@ -36,8 +35,7 @@
              connectedBottom:isConnectedBottom(row,column),
              takenPlayerOne:isTakenPlayerOne(row,column),
              takenPlayerTwo:isTakenPlayerTwo(row,column)}">
-                <img ng-show="shouldShowImage(row,column)"
-                     ng-src="{{imageLink(row,column)}}">
+                <img ng-show="shouldShowImage(row,column)" ng-src="{{imageLink(row,column)}}">
             </div>
         </div>
     </div>

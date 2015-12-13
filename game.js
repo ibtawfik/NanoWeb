@@ -48,9 +48,9 @@ angular.module('myApp')
 
                 $scope.imageLink=function(row,column){
                         if(board[row][column].status === "occupied_one"){
-                                return "/bertleft.png";
+                                return "bertleft.png";
                         }else if(board[row][column].status === "occupied_two"){
-                                return "/coily.png";
+                                return "coily.png";
                         }
 
                 };
