@@ -46,19 +46,20 @@ angular.module('myApp')
                 };
 
                 $scope.imageLink=function(row,column){
+                        console.log ("IMAGECHECK")
                         if(board[row][column].status === "occupied_one"){
-                                return "bertleft.png";
+                                return "/bertleft.png";
                         }else if(board[row][column].status === "occupied_two"){
-                                return "coily.png";
+                                return "/coily.png";
                         }else{
-                                return false;
+                                return "/coily.png";//false;
                         }
 
                 };
                 $scope.update=function(row,column){
                         console.log(player);
                         if(Logic.isValidMove(row,column,player)){
-                                Logic.makeMove(row,column,player);
+                                Logic.makeMove(row,column,player,["UP","DOWN","LEFT","RIGHT"]);
                         }
                 };
 

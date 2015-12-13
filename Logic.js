@@ -381,16 +381,16 @@
 
 
                 this._occupy = function (piece) {
-                    this.occupant = piece;
+                    that.occupant = piece;
                     if (piece.getPlayerId() == PlayerId.ONE) {
-                        this.status = Status.OCCUPIED_P1;
+                        that.status = Status.OCCUPIED_P1;
                     } else {
-                        this.status = Status.OCCUPIED_P2;
+                        that.status = Status.OCCUPIED_P2;
                     }
                 };
 
                 this.getStatus = function () {
-                    return this.status;
+                    return that.status;
                 }
             };
 
@@ -486,7 +486,7 @@
                     }
                     obj.row=i;
                     obj.col=j;
-                    row.push(obj)
+                    row.push(angular.copy(obj))
                 }
               board.push(row);
               }
@@ -533,7 +533,7 @@
             player1 = new Player(PlayerId.ONE, numPieces,"PLAYER1");
             player2 = new Player(PlayerId.TWO, numPieces, "PLAYER2");
 
-            this.receiveMoves = function (player, move) {
+           /* this.receiveMoves = function (player, move) {
 
                 if (player1 != null && player == 1) {
                     p1_nextMove = move;
@@ -550,7 +550,7 @@
                         p2_nextMove = null;
                     }
                 }
-            }
+            }*/
 
 
 
@@ -642,7 +642,23 @@
                 return node.status===Status.FREE && player === playerTurn;
             }
 
-            function makeMove (row, column, player) {
+            function makeMove (row, column, player,program) {
+                playerTurn = !playerTurn;
+                if(player == PlayerId.ONE){
+                    p1_nextMove = program;
+                    player1.setNextMove(p1_nextMove);
+                }else {
+                    p2_nextMove = program;
+                    player2.setNextMove(p2_nextMove);
+                    movePieces();
+                    p1_nextMove = null;
+                    p2_nextMove = null;
+                    }
+                }
+
+
+               function movePieces(){
+
                 var a = advantage();
                 if (a === (PlayerId.ONE)) {
                     move(row, column, player1);
