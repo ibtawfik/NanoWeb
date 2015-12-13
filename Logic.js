@@ -642,7 +642,7 @@
                 return node.status===Status.FREE && player === playerTurn;
             }
 
-            function makeMove (row, column, player,program) {
+            function makeMove (row, col, player,program) {
                 playerTurn = !playerTurn;
                 if(player == PlayerId.ONE){
                     p1_nextMove = program;
@@ -650,22 +650,25 @@
                 }else {
                     p2_nextMove = program;
                     player2.setNextMove(p2_nextMove);
-                    movePieces();
+                }
+                    movePieces(row,col);
+                if(player == PlayerId.TWO) {
+                    advanceTime(a);
                     p1_nextMove = null;
                     p2_nextMove = null;
-                    }
+                }
                 }
 
 
-               function movePieces(){
+               function movePieces(row,col){
 
                 var a = advantage();
                 if (a === (PlayerId.ONE)) {
-                    move(row, column, player1);
+                    move(row, col, player1);
                 }   else {
-                    move(row, column,player2);
+                    move(row, col,player2);
                 }
-                advanceTime(a);
+
             }
 
             function setGameMode (gameMode) {

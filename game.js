@@ -52,7 +52,7 @@ angular.module('myApp')
                         }else if(board[row][column].status === "occupied_two"){
                                 return "/coily.png";
                         }else{
-                                return "/coily.png";//false;
+                                return "/Nano/coily.png";//false;
                         }
 
                 };
