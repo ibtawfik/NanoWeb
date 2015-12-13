@@ -672,13 +672,20 @@
             function currentPlayer(){
                 return playerTurn;
             }
+
+            function completeTurn(){
+
+            }
+
+
             return {
                 setGameMode: setGameMode,
                 isValidMove: isValidMove,
                 getBoard: getBoard,
                 makeMove: makeMove,
                 createPlayer:createPlayer,
-                currentPlayer:currentPlayer
+                currentPlayer:currentPlayer,
+                completeTurn:completeTurn
             };
 
 
