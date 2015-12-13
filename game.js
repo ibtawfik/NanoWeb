@@ -157,19 +157,22 @@ angular.module('myApp')
                         Logic.getRemainingMoves(playerNumber);
                 };
 
-                $scope.start = function(){
-                        var player1Name = document.getElementById("p1Name").value;
-                        var player2Name = document.getElementById("p2Name").value;
-                        var numberOfPlayers = numberOfPlayers(document.getElementById("numPlayers"));
-                        newGame(numberOfPlayers, player1Name, player2Name);
-                }
-
-                function numberOfPlayers(checkbox){
+                function boo(checkbox){
                         if(checkbox.checked){
                                 return 2;
                         }else{
                                 return 1;
                         }
                 }
+
+                $scope.start = function(){
+                        var player1Name = document.getElementById("p1Name").value;
+                        var player2Name = document.getElementById("p2Name").value;
+                        var checkbox = document.getElementById("numPlayers");
+                        var numberOfPlayers = boo(checkbox);
+                        newGame(numberOfPlayers, player1Name, player2Name);
+                };
+
+
 
             }]);
