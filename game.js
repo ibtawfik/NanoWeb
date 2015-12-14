@@ -92,13 +92,13 @@ angular.module('myApp')
 
                 $scope.getLeft=function(){
                         if(stored){
-                                return stored.r * 6.66;
+                                return stored.c * 6.66 * .75;
                         }
                 };
 
                 $scope.getTop=function(){
                         if(stored){
-                                return stored.c * 6.66 * .75;
+                                return stored.r * 6.66;
                         }
                 };
 
@@ -146,6 +146,40 @@ angular.module('myApp')
                                 }
                         }
                         return returnVals;
+                }
+
+                function newGame (numberOfPlayers, player1Name, player2Name){
+                        Logic.newGame(numberOfPlayers, player1Name, player2Name);
+                }
+
+                $scope.getScore = function(playerNumber){
+                        Logic.getScore(playerNumber);
+                };
+
+                $scope.getRemainingMoves = function(playerNumber){
+                        Logic.getRemainingMoves(playerNumber);
+                };
+
+                function boo(checkbox){
+                        if(checkbox.checked){
+                                return 2;
+                        }else{
+                                return 1;
+                        }
+                }
+
+                $scope.start = function(){
+                        var player1Name = document.getElementById("p1Name").value;
+                        var player2Name = document.getElementById("p2Name").value;
+                        var checkbox = document.getElementById("numPlayers");
+                        var numberOfPlayers = boo(checkbox);
+                        newGame(numberOfPlayers, player1Name, player2Name);
+                };
+
+                $scope.isTurn = function(player){
+                        if(player === Logic.currentPlayer()){
+                                return "success";
+                        }
                 }
 
             }]);
