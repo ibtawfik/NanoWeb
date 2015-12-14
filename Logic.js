@@ -70,9 +70,10 @@
                         var nextPiece = this._unused.splice(0, 1)[0];
                         nextPiece.programPiece(program);
                         nextPiece.placeOnNode(node);
-                        node.place(nextPiece);
+                    //      nextPiece._location = node;
+                   //     node.place(nextPiece);
                         node._occupy(nextPiece);
-                        node.desireOccupancy = [];
+                     //   node.desireOccupancy = [];
                         this._inPlay.push(nextPiece);
                         nextPiece.advance() //claim node for next round
                         return true;
@@ -102,7 +103,7 @@
                     var i = that._inPlay.length;
                     while (i--) {
                         if (that._inPlay[i].isDead()) {
-                            var piece = that._inPlay.splice(i, 1);
+                            var piece = that._inPlay.splice(i, 1)[0];
                             that._dead.push(piece);
                         }
                     }
@@ -130,7 +131,9 @@
                         score = score + piece.getNodesEaten();
                     });
                     this._dead.map(function (piece) {
-                        score = score + piece.getNodesEaten();
+                        //score = score + piece.getNodesEaten();
+                        score = score + piece._nodesEaten;
+
                     });
 
                     return score;
@@ -178,8 +181,9 @@
 
                 this.placeOnNode = function (node) {
                     this._location = node;
-                    this._nodesEaten++;
+                  //  this._nodesEaten++;
                 }
+
                 this.getPlayerId = function () {
                     return this._playerId;
                 }
@@ -377,6 +381,7 @@
                     } else {
                         this.status = Status.OCCUPIED_P2;
                     }
+                    piece._nodesEaten++;
                 };
 
                 this.getStatus = function () {
@@ -399,21 +404,9 @@
 
             this._game = null;
 
-            var sampleObject = {
-                status: "void",
-                left: true,
-                right: false,
-                up: true,
-                down: false
-            };
+            var board=[];
 
-            var sampleObject2 = {
-                status: "void",
-                left: false,
-                right: true,
-                up: true,
-                down: true
-            };
+            function resetboard() {
 
             // var objectx  = Object.create(Node);
             var objectx = new Node();
@@ -448,9 +441,6 @@
                 objectx4.down = true
 
 
-            var board=[];
-
-            function resetboard() {
             board = [];
             for (var i = 0; i < boardSize; i++) {
                 var row = [];

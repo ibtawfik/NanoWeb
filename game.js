@@ -63,6 +63,10 @@ angular.module('myApp')
                         }
                         console.log(row + " " + column);
                         console.log(Logic.getBoard()[row][column])
+                        console.log("PLAYER1:" + Logic.getScore(0) + "PLAYER2:" + Logic.getScore(1));
+                        if (Logic.getRemainingMoves(player)==0)
+                                $scope.completeTurn();
+
                 }
 
                 $scope.setGameMode=function(gameMode){
@@ -154,11 +158,11 @@ angular.module('myApp')
                 }
 
                 $scope.getScore = function(playerNumber){
-                        Logic.getScore(playerNumber);
+                       return Logic.getScore(playerNumber);
                 };
 
                 $scope.getRemainingMoves = function(playerNumber){
-                        Logic.getRemainingMoves(playerNumber);
+                       return Logic.getRemainingMoves(playerNumber);
                 };
 
                 function boo(checkbox){
