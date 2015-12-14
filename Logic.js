@@ -668,9 +668,13 @@
                     p1_nextMove = null;
                     p2_nextMove = null;
                 }
-                else if (myGameMode===gameMode.P2C)
-                          player2.makeRandomMove()
-                 playerTurn = playerTurn===PlayerId.ONE?PlayerId.TWO:PlayerId.ONE;
+                playerTurn = playerTurn===PlayerId.ONE?PlayerId.TWO:PlayerId.ONE;
+
+                if (myGameMode===gameMode.P2C &&  playerTurn===PlayerId.TWO) {
+                    player2.makeRandomMove()
+                    completeTurn()
+                }
+
                 }
 
             function noMorePieces(){

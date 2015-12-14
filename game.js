@@ -67,6 +67,7 @@ angular.module('myApp')
                         if (Logic.getRemainingMoves(player)==0)
                                 $scope.completeTurn();
 
+
                 }
 
                 $scope.setGameMode=function(gameMode){
