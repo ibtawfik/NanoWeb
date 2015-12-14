@@ -526,7 +526,7 @@
 
             var players;
 
-            newGame(2,"Qber","Coily")
+            newGame(2,"Qbert","Coily")
 
 
 
@@ -701,6 +701,20 @@
               return players[playerID].unusedCount();
             }
 
+            function isGameOver(){
+                return player1.deadCount()==numPieces && player2.deadCount()==numPieces
+            }
+
+            function  getWinner(){
+                if (player1.getScore()>player2.getScore())
+                    return [player1.getPlayerName(),player1.getScore()]
+                else
+                    return  [player2.getPlayerName(),player2.getScore()]
+
+
+
+
+            }
 
             return {
                 isValidMove: isValidMove,
@@ -712,7 +726,9 @@
                 advanceTime:advanceTime,
                 newGame:newGame,
                 getScore:getScore,
-                getRemainingMoves:getRemainingMoves
+                getRemainingMoves:getRemainingMoves,
+                isGameOver: isGameOver,
+                getWinner:getWinner
             };
 
 

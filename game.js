@@ -6,8 +6,10 @@ angular.module('myApp')
       .controller('Ctrl', ['$scope','Logic','$interval',
         function ($scope, Logic, $interval) {
                 var board = Logic.getBoard();
-
+                var winningScore;
+                var winningPlayer;
                 var stored;
+                var intervalpromise
                 $scope.isVoid = function(row,column){
                         return board[row][column].status === "void";
                 };
@@ -80,10 +82,20 @@ angular.module('myApp')
                         console.log(Logic.getBoard());
 
                         if (Logic.noMorePieces()){
-                                $interval(Logic.advanceTime,1000);
+                             //   $interval(Logic.advanceTime,1000);
+                                 intervalpromise = $interval(playtoend,1000);
                         }
                 };
-
+                  function playtoend(){
+                        if (Logic.isGameOver()){
+                            getWinner()
+                            $interval.cancel(intervalpromise)
+                              //  alert("Winner: " + winningPlayer +"!")
+                        }
+                        else {
+                                Logic.advanceTime()
+                        }
+                  }
                 $scope.store = function(row,column){
                         stored = {r:row,c:column};
                 };
@@ -159,13 +171,38 @@ angular.module('myApp')
                         board = Logic.getBoard();
                 }
 
+                function getWinner(){
+                    var winner = Logic.getWinner()
+                    winningPlayer=winner[0];
+                    winningScore=winner[1];
+                }
+
                 $scope.getScore = function(playerNumber){
                        return Logic.getScore(playerNumber);
                 };
 
+                $scope.getWinningScore = function (){
+                   return winningScore;
+                }
+
+                $scope.getWinningPlayer = function(){
+                   return winningPlayer;
+                }
+
+                $scope.isGameOver = function(){
+
+                    var gameover = Logic.isGameOver()
+                        if (gameover){
+                                console.log("GAME OVER")
+                        }
+                        return gameover
+                }
+
                 $scope.getRemainingMoves = function(playerNumber){
                        return Logic.getRemainingMoves(playerNumber);
                 };
+
+
 
                 function boo(checkbox){
                         if(checkbox.checked){

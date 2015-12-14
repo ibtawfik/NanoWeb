@@ -51,7 +51,7 @@
     <input ng-show="showDirectionInput()" ng-keypress="test($event)" style ="position:absolute; left:{{getLeft()}}%; top:{{getTop()}}%; width: 6.66%; height: 6.66%;;"  type="text" class="form-control" placeholder="UDLR" autofocus>
     <input class="">
     <div style="position: absolute; right: 0px;top: 0px; width:25%; height: 100%; border: solid;">
-
+        <label ng-if="isGameOver()">{{getWinningPlayer()}} won with score {{getWinningScore()}} </label>
     <button type="button"  ng-click="completeTurn()" class="btn btn-success btn-lg">Complete Turn</button>
     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
         New Game
