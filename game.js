@@ -155,6 +155,7 @@ angular.module('myApp')
 
                 function newGame (numberOfPlayers, player1Name, player2Name){
                         Logic.newGame(numberOfPlayers, player1Name, player2Name);
+                        console.log(Logic.getBoard())
                 }
 
                 $scope.getScore = function(playerNumber){

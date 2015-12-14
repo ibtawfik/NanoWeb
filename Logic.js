@@ -132,12 +132,24 @@
                     });
                     this._dead.map(function (piece) {
                         //score = score + piece.getNodesEaten();
-                        score = score + piece._nodesEaten;
+                        score = score + piece.getNodesEaten();
 
                     });
 
                     return score;
                 }
+
+                this.makeRandomMove=function(){
+                    var freenodes =[]
+                    for (var i = 0; i < boardSize; i++)
+                        for (var j = 0; j < boardSize; j++) {
+                            if (board[i][j].isFree())
+                               freenodes.push(board[i][j]);
+                        }
+                    var randint = Math.floor(Math.random() * freenodes.length)
+                    makeMove(freenodes[randint].row,freenodes[randint].col,PlayerId.TWO,["UP","DOWN","LEFT","RIGHT"])
+                }
+
             };
 
             var Piece = function (playerId) {
@@ -626,13 +638,12 @@
 
             }
 
-            function setGameMode (gameMode) {
-                myGameMode =gameMode;
-              /*  if (gameMode === gameMode.P2C) {
-                    currentGameMode = gameModel
-                }
-                else if (gameMode === gameMode.P2P) {
-                }*/
+            function setGameMode (numPlayers) {
+                if (numPlayers==2)
+                    myGameMode =gameMode.P2P
+                else
+                    myGameMode =gameMode.P2C
+
             }
 
             function getBoard() {
@@ -657,10 +668,9 @@
                     p1_nextMove = null;
                     p2_nextMove = null;
                 }
-                console.log(getScore(0));
-                console.log(getScore(1));
+                else if (myGameMode===gameMode.P2C)
+                          player2.makeRandomMove()
                  playerTurn = playerTurn===PlayerId.ONE?PlayerId.TWO:PlayerId.ONE;
-
                 }
 
             function noMorePieces(){
@@ -675,6 +685,7 @@
              player2 = new Player(PlayerId.TWO, numPieces, player2Name);
              players = [player1,player2];
              resetboard()
+              playerTurn = PlayerId.ONE;
 
             }
 
