@@ -179,6 +179,7 @@ angular.module('myApp')
                         var checkbox = document.getElementById("numPlayers");
                         var numberOfPlayers = boo(checkbox);
                         newGame(numberOfPlayers, player1Name, player2Name);
+                        stored = null;
                 };
 
                 $scope.isTurn = function(player){
