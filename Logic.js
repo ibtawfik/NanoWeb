@@ -31,10 +31,10 @@
                 TWO: 1
             });
 
-            var playerTurn=PlayerId.ONE;
-            var myGameMode=gameMode.P2P;
+            var playerTurn = PlayerId.ONE;
+            var myGameMode = gameMode.P2P;
             var numPieces = 7;
-            var boardSize=15;
+            var boardSize = 15;
             var Player = function (playerId, pieces, playerName) {
                 var that = this
                 this._playerId = playerId;
@@ -54,17 +54,17 @@
 
                 this.advanceTime = function () {
                     //For all inplay pieces move them
-                    that._inPlay.forEach(function (piece) {
+                    this._inPlay.forEach(function (piece) {
                         piece.advance()
                     });
                     //If any of the pieces become dead then remove from the inplay
-                    clearDead();
+                    this.clearDead();
                 };
 
                 /**
                  * Used to make the initial move for a an unused piece, requires the node and the program for the piece
                  */
-                 this.place=function(node, program) {
+                this.place = function (node, program) {
                     //var node = board[x][y];
                     if (node.isFree() && this._unused.length > 0) {
                         var nextPiece = this._unused.splice(0, 1)[0];
@@ -72,7 +72,7 @@
                         nextPiece.placeOnNode(node);
                         node.place(nextPiece);
                         node._occupy(nextPiece);
-                        node.desireOccupancy=[];
+                        node.desireOccupancy = [];
                         this._inPlay.push(nextPiece);
                         nextPiece.advance() //claim node for next round
                         return true;
@@ -98,7 +98,7 @@
                     return null;
                 };
 
-                var clearDead = function () {
+                this.clearDead = function () {
                     var i = that._inPlay.length;
                     while (i--) {
                         if (that._inPlay[i].isDead()) {
@@ -126,7 +126,7 @@
 
                 this.getScore = function () {
                     var score = 0;
-                    that._inPlay.map(function (piece) {
+                    this._inPlay.map(function (piece) {
                         score = score + piece.getNodesEaten();
                     });
                     this._dead.map(function (piece) {
@@ -144,26 +144,13 @@
                 this._moveCount = 0;
                 this._isDead = false;
                 this._nodesEaten = 0;
-               /* function _isValidProgram (moveOrder) {
-                    var that = this;
-                    if (moveOrder == null) {
-                        return false;
-                    }
-                    //Should have 4 moves
-                    if (moveOrder.length != 4) {
-                        return false;
-                    }
 
-                    //Should have each move type
-                    return moveOrder.indexOf(Direction.UP) > -1 && moveOrder.indexOf(Direction.DOWN) > -1 &&
-                        moveOrder.indexOf(Direction.LEFT) > -1 && moveOrder.indexOf(Direction.RIGHT) > -1;
-                }*/
 
                 this.advance = function () {
                     if (this._isDead == false) {
                         var numberOfDirection = 4;
                         Object.freeze(numberOfDirection);
-                        if (this._location != null ) {
+                        if (this._location != null) {
                             //Search for valid move
                             for (var i = this._moveCount; i < this._moveCount + numberOfDirection; i++) {
                                 var nextMove = this._program.indexOf((i) % numberOfDirection);
@@ -182,10 +169,10 @@
                     }
                     return null;
                 }
-                 this.programPiece = function (moveOrder) {
-                  //  if (_isValidProgram(moveOrder)) {
-                        this._program = moveOrder;
-                   // }
+                this.programPiece = function (moveOrder) {
+                    //  if (_isValidProgram(moveOrder)) {
+                    this._program = moveOrder;
+                    // }
                 }
 
 
@@ -197,7 +184,7 @@
                     return this._playerId;
                 }
 
-                 this.getNodesEaten = function () {
+                this.getNodesEaten = function () {
                     return this._nodesEaten;
                 }
 
@@ -213,7 +200,7 @@
                     }
 
                 }
-                 this.killPiece = function () {
+                this.killPiece = function () {
                     this._isDead = true;
                 }
 
@@ -222,15 +209,13 @@
                 }
 
 
-
             }
 
 
-
-            var Node = function (row,col) {
+            var Node = function (row, col) {
                 var that = this
-                this.row=row
-                this.col=col
+                this.row = row
+                this.col = col
                 // this._xLoc = xLoc;
                 //  this._yLoc = yLoc;
                 this.status = Status.FREE;
@@ -247,59 +232,60 @@
                 this.desireOccupancy = [];
 
                 this.isFree = function () {
-                    return this.status===(Status.FREE);}
+                    return this.status === (Status.FREE);
+                }
 
                 this.canMove = function (direction) {
 
-                        switch (direction) {
-                            case Direction.UP:
-                                if (this.up == false ||this.row==0) {
-                                    return false;
-                                } else {
-                                    return board[this.row-1][this.col].isFree();
-                                }
-                            case Direction.DOWN:
-                                if (this.down == false || this.row==boardSize-1) {
-                                    return false;
-                                } else {
-                                    return board[this.row+1][this.col].isFree();
-                                }
-                            case Direction.LEFT:
-                                if (this.left == false || this.col===0) {
-                                    return false;
-                                } else {
-                                    return board[this.row][this.col-1].isFree();
-                                }
-                            case Direction.RIGHT:
-                                if (this.right == false || this.col==boardSize-1) {
-                                    return false;
-                                } else {
-                                    return board[this.row][this.col+1].isFree();
-                                }
-                            default:
-                                return false;
-                        }
-                    }
-
-                this.move=function(direction){
-                    var node;
-                    switch (direction){
+                    switch (direction) {
                         case Direction.UP:
-                            node = board[this.row-1][this.col]
+                            if (this.up == false || this.row == 0) {
+                                return false;
+                            } else {
+                                return board[this.row - 1][this.col].isFree();
+                            }
+                        case Direction.DOWN:
+                            if (this.down == false || this.row == boardSize - 1) {
+                                return false;
+                            } else {
+                                return board[this.row + 1][this.col].isFree();
+                            }
+                        case Direction.LEFT:
+                            if (this.left == false || this.col === 0) {
+                                return false;
+                            } else {
+                                return board[this.row][this.col - 1].isFree();
+                            }
+                        case Direction.RIGHT:
+                            if (this.right == false || this.col == boardSize - 1) {
+                                return false;
+                            } else {
+                                return board[this.row][this.col + 1].isFree();
+                            }
+                        default:
+                            return false;
+                    }
+                }
+
+                this.move = function (direction) {
+                    var node;
+                    switch (direction) {
+                        case Direction.UP:
+                            node = board[this.row - 1][this.col]
                             break;
                         case Direction.DOWN:
-                            node = board[this.row+1][this.col];
+                            node = board[this.row + 1][this.col];
                             break;
                         case Direction.LEFT:
-                            node=board[this.row][this.col-1];
+                            node = board[this.row][this.col - 1];
                             break;
                         case Direction.RIGHT:
-                            node=board[this.row][this.col+1];
+                            node = board[this.row][this.col + 1];
                             break;
                     }
                     node.place(this.occupant);
                     this.occupant.placeOnNode(node);
-                 //   console.log("row:" + row +",col:" + col + ":" +board);
+                    //   console.log("row:" + row +",col:" + col + ":" +board);
                 }
 
                 this.place = function (piece) {
@@ -309,8 +295,8 @@
                 /**
                  * After all pieces have moved onto thier desired node decide which ones to keep and which ones to eject
                  */
-             //   this.moveTime = function (playerWithPriority) {
-                  this.moveTime = function () {
+                    //   this.moveTime = function (playerWithPriority) {
+                this.moveTime = function () {
                     //First check if the node is currently occupied. If so then move the occupant along
                     if (this.occupant != null) {
                         if (this.occupant.getPlayerId() == (PlayerId.ONE)) {
@@ -371,7 +357,7 @@
                     );
 
                     newPieces.map(function (piece) {
-                        if (occuopantSelected || (newPieces.length > 1)){// && piece.getPlayerId() != playerWithPriority)) {
+                        if (occuopantSelected || (newPieces.length > 1)) {// && piece.getPlayerId() != playerWithPriority)) {
                             piece.killPiece();
                         } else {
                             that._occupy(piece);
@@ -379,7 +365,7 @@
                         }
                     });
 
-                    this.desireOccupancy=[];
+                    this.desireOccupancy = [];
 
                 };
 
@@ -429,84 +415,99 @@
                 down: true
             };
 
-          // var objectx  = Object.create(Node);
-           var  objectx = new Node();
-                 objectx.status=  Status.FREE
-                objectx.left= false
-                objectx.right= true
-                objectx.up= true,
-                objectx.down=true
+            // var objectx  = Object.create(Node);
+            var objectx = new Node();
+            objectx.status = Status.FREE
+            objectx.left = false
+            objectx.right = true
+            objectx.up = true,
+                objectx.down = true
 
             //var objectx2  = Object.create(Node);
-            var  objectx2 = new Node();
-            objectx2.status= Status.VOID;
-            objectx2.left= false
-            objectx2.right= false
-            objectx2.up= false,
-                objectx2.down=true
+            var objectx2 = new Node();
+            objectx2.status = Status.VOID;
+            objectx2.left = false
+            objectx2.right = false
+            objectx2.up = false,
+                objectx2.down = true
 
-           // var objectx3  = Object.create(Node);
-            var  objectx3 = new Node();
-            objectx3.status= Status.FREE;
-            objectx3.left= false
-            objectx3.right= false
-            objectx3.up= false,
-            objectx3.down=true
+            // var objectx3  = Object.create(Node);
+            var objectx3 = new Node();
+            objectx3.status = Status.FREE;
+            objectx3.left = false
+            objectx3.right = false
+            objectx3.up = false,
+                objectx3.down = true
 
             //var objectx4  = Object.create(Node);
-            var objectx4  =new Node();
-            objectx4.status= Status.FREE;
-            objectx4.left= false
-            objectx4.right= false
-            objectx4.up= false,
-                objectx4.down=true
+            var objectx4 = new Node();
+            objectx4.status = Status.FREE;
+            objectx4.left = false
+            objectx4.right = false
+            objectx4.up = false,
+                objectx4.down = true
+
 
             var board=[];
-            for (var i=0;i<boardSize;i++){
-                var row =[];
-                for (var j=0;j<boardSize;j++){
+
+            function resetboard() {
+            board = [];
+            for (var i = 0; i < boardSize; i++) {
+                var row = [];
+                for (var j = 0; j < boardSize; j++) {
                     var obj;
-                    var randint = Math.floor(Math.random()*5)
-                    switch (randint){
-                        case 0:obj=objectx;break;
-                        case 1:obj=objectx2;break;
-                        case 2:obj=objectx3;break;
-                        case 3:obj=objectx4;break;
-                        default:obj=objectx;
+                    var randint = Math.floor(Math.random() * 5)
+                    switch (randint) {
+                        case 0:
+                            obj = objectx;
+                            break;
+                        case 1:
+                            obj = objectx2;
+                            break;
+                        case 2:
+                            obj = objectx3;
+                            break;
+                        case 3:
+                            obj = objectx4;
+                            break;
+                        default:
+                            obj = objectx;
                     }
-                    obj.row=i;
-                    obj.col=j;
+                    obj.row = i;
+                    obj.col = j;
                     row.push(angular.copy(obj))
                 }
-              board.push(row);
-              }
-            for (var i=0;i<boardSize;i++)
-                for (var j=0;j<boardSize;j++){
-                    if (i==0)
-                        board[i][j].up=false;
-                    if (j===0)
-                        board[i][j].left=false;
-                    if (j===boardSize-1)
-                        board[i][j].down=false;
+                board.push(row);
+            }
+            for (var i = 0; i < boardSize; i++)
+                for (var j = 0; j < boardSize; j++) {
+                    if (i == 0)
+                        board[i][j].up = false;
+                    if (j === 0)
+                        board[i][j].left = false;
+                    if (j === boardSize - 1)
+                        board[i][j].down = false;
 
-                    if (i===boardSize-1)
-                        board[i][j].right=false;
+                    if (i === boardSize - 1)
+                        board[i][j].right = false;
 
 
-                    if (board[i][j].up==true && i>0)
-                        board[i-1][j].down=true;
+                    if (board[i][j].up == true && i > 0)
+                        board[i - 1][j].down = true;
 
-                    if (board[i][j].down==true && i<boardSize-1)
-                        board[i+1][j].up=true;
+                    if (board[i][j].down == true && i < boardSize - 1)
+                        board[i + 1][j].up = true;
 
-                    if (board[i][j].left==true && j>0)
-                        board[i][j-1].right=true;
+                    if (board[i][j].left == true && j > 0)
+                        board[i][j - 1].right = true;
 
-                    if (board[i][j].right==true &&  j<boardSize-1)
-                        board[i][j+1].left=true;
+                    if (board[i][j].right == true && j < boardSize - 1)
+                        board[i][j + 1].left = true;
 
 
                 }
+        }
+
             var player1;
             var player2;
             var timeStep;
@@ -520,8 +521,13 @@
             /****************************************************************************************
              * Commands from the players
              /**/
-            player1 = new Player(PlayerId.ONE, numPieces,"PLAYER1");
-            player2 = new Player(PlayerId.TWO, numPieces, "PLAYER2");
+
+            var players;
+
+            newGame(2,"Qber","Coily")
+
+
+
 
             function advantage() {
                 var player = Math.random();
@@ -532,10 +538,9 @@
                 }
             }
 
-           // function advanceTime(advantage) {
                 function advanceTime() {
-                    for (i=0;i<boardSize;i++){
-                        for (j=0;j<boardSize;j++){
+                    for (var i=0;i<boardSize;i++){
+                        for (var j=0;j<boardSize;j++){
                             board[i][j].moveTime();}
                         }
 
@@ -662,41 +667,44 @@
                     p1_nextMove = null;
                     p2_nextMove = null;
                 }
+                console.log(getScore(0));
+                console.log(getScore(1));
                  playerTurn = playerTurn===PlayerId.ONE?PlayerId.TWO:PlayerId.ONE;
 
-                }*/
+                }
 
             function noMorePieces(){
                 return player1.unusedCount()==0 && player2.unusedCount()==0
-            }
+
             }
 
 
             function newGame(numberOfPlayers, player1Name, player2Name){
+             setGameMode(numberOfPlayers);
+             player1 = new Player(PlayerId.ONE, numPieces,player1Name);
+             player2 = new Player(PlayerId.TWO, numPieces, player2Name);
+             players = [player1,player2];
+             resetboard()
 
             }
 
-            function getScore(playerNumber){
-
+            function getScore(playerID){
+              return players[playerID].getScore();
             }
 
-            function getRemainingMoves(playerNumber){
-
+            function getRemainingMoves(playerID){
+              return players[playerID].unusedCount();
             }
 
 
             return {
-                setGameMode: setGameMode,
                 isValidMove: isValidMove,
                 getBoard: getBoard,
                 makeMove: makeMove,
-                createPlayer:createPlayer,
                 currentPlayer:currentPlayer,
                 completeTurn:completeTurn,
                 noMorePieces:noMorePieces,
-                advanceTime:advanceTime
-
-                completeTurn:completeTurn,
+                advanceTime:advanceTime,
                 newGame:newGame,
                 getScore:getScore,
                 getRemainingMoves:getRemainingMoves

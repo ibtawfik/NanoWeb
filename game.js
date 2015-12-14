@@ -73,6 +73,7 @@ angular.module('myApp')
                         console.log("TURN COMPLETE");
                         Logic.completeTurn();
                         console.log(Logic.getBoard());
+
                         if (Logic.noMorePieces()){
                                 $interval(Logic.advanceTime,1000);
                         }
