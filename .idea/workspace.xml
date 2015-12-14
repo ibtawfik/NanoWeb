@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="ac39c0f1-749d-452d-8d2d-29809e5263af" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Logic.js" afterPath="$PROJECT_DIR$/Logic.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/game.js" afterPath="$PROJECT_DIR$/game.js" />
     </list>
     <ignored path="Nano.iws" />
@@ -39,8 +38,8 @@
       <file leaf-file-name="game.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/game.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.3478261">
-              <caret line="170" column="25" selection-start-line="170" selection-start-column="25" selection-end-line="170" selection-end-column="25" />
+            <state vertical-scroll-proportion="0.41943735">
+              <caret line="157" column="49" selection-start-line="157" selection-start-column="49" selection-end-line="157" selection-end-column="49" />
               <folding />
             </state>
           </provider>
@@ -381,7 +380,13 @@
       <option name="project" value="LOCAL" />
       <updated>1450060035299</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Added single player mode">
+      <created>1450062323389</created>
+      <option name="number" value="00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1450062323389</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -449,7 +454,8 @@
     <MESSAGE value="Merge branch 'master' of https://github.com/ibtawfik/NanoWeb&#10;&#10;Conflicts:&#10;&#9;Logic.js&#10;&#9;index.html&#10;" />
     <MESSAGE value="Merge branch 'master' of https://github.com/ibtawfik/NanoWeb&#10;&#10;Conflicts:&#10;&#9;Logic.js&#10;&#9;index.html&#10;&#10;Added API implementation. Need to fix score." />
     <MESSAGE value="Fixed scoring. Turns are now automatic when no pieces remain for player" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed scoring. Turns are now automatic when no pieces remain for player" />
+    <MESSAGE value="Added single player mode" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added single player mode" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -729,8 +735,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/game.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3478261">
-          <caret line="170" column="25" selection-start-line="170" selection-start-column="25" selection-end-line="170" selection-end-column="25" />
+        <state vertical-scroll-proportion="0.41943735">
+          <caret line="157" column="49" selection-start-line="157" selection-start-column="49" selection-end-line="157" selection-end-column="49" />
           <folding />
         </state>
       </provider>
